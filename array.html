@@ -1,0 +1,90 @@
+<!-- array with let and const with update -->
+
+<script>
+  let condiments = ['Ketchup', 'Mustard', 'Soy Sauce', 'Sriracha'];
+
+  const utensils = ['Fork', 'Knife', 'Chopsticks', 'Spork'];
+  condiments[0] = 'Mayo';
+  console.log(condiments);
+  console.log(condiments.length);
+  condiments = ['Mayo'];
+  console.log(condiments);
+  utensils[3] = 'Spoon';
+  console.log(utensils);
+</script>
+<!-- array push and pop mathod
+  1. push = add items in array
+  2. pop = remove item in array -->
+
+<!-- push and pop mathod only impliment on last item of an array -->
+
+<!-- 1. array push mathod -->
+<script>
+  const chores = ['wash dishes', 'do laundry', 'take out trash'];
+  chores.push('Sherlock', 'Holmes');
+  console.log(chores)
+</script>
+
+<!--2. array pop mathod-->
+<script>
+  const jay = [
+    "wash dishes",
+    "do laundry",
+    "take out trash",
+    "cook dinner",
+    "mop floor",
+  ];
+  jay.pop();
+  console.log(jay);
+</script>
+<!-- 
+  array .slice(), .splice(), .shift(), .unshift(), mathod -->
+<script>
+  const groceryList = ['orange juice', 'bananas', 'coffee beans', 'brown rice', 'pasta', 'coconut oil', 'plantains'];
+
+  groceryList.shift();
+
+  console.log(groceryList);
+
+  groceryList.unshift('popcorn');
+
+  console.log(groceryList);
+
+  console.log(groceryList.slice(1, 4));
+
+  console.log(groceryList);
+
+  const pastaIndex = groceryList.indexOf('pasta');
+
+  console.log(pastaIndex);
+</script>
+<!-- array with function -->
+<script>
+  const concept = ['arrays', 'can', 'be', 'mutated'];
+
+  function changeArr(arr) {
+    arr[3] = 'MUTATED';
+  }
+
+  changeArr(concept);
+  console.log(concept);
+
+  function removeElement(newArr) {
+    newArr.pop();
+  }
+  removeElement(concept);
+  console.log(concept);
+</script>
+
+<!-- nested array -->
+<script>
+  const numberClusters = [[1, 2], [3, 4], [5, 6]];
+  const target = numberClusters[1][1];
+  console.log(target);
+</script>
+
+
+<script>
+  const randomNumbers = [375, 200, 3, 7, 13, 852];
+
+</script>

@@ -1,0 +1,299 @@
+<!-- Accessing Properties-->
+<script>
+    let spaceship = {
+        homePlanet: 'Earth',
+        color: 'silver',
+        'Fuel Type': 'Turbo Fuel',
+        numCrew: 5,
+        flightPath: ['Venus', 'Mars', 'Saturn']
+    };
+
+    let crewCount = spaceship.numCrew;
+    let planetArray = spaceship.flightPath;
+</script>
+
+<!--Bracket Notation-->
+<script>
+    let spaceship2 = {
+        'Fuel Type': 'Turbo Fuel',
+        'Active Mission': true,
+        homePlanet: 'Earth',
+        numCrew: 5
+    };
+    let propName = 'Active Mission';
+    let isActive = spaceship2['Active Mission'];
+
+    console.log(spaceship2[propName]);
+</script>
+<!-- Property Assignment-->
+<script>
+    let spaceship1 = {
+        'Fuel Type': 'Turbo Fuel',
+        homePlanet: 'Earth',
+        color: 'silver',
+        'Secret Mission': 'Discover life outside of Earth.'
+    };
+    // Reassign the color property
+    spaceship1.color = 'glorious gold';
+    //add a numEngines property with a numeric value between 1 and 10
+    spaceship1.numEngines = 9;
+    //Use the delete operator 
+    delete spaceship['Secret Mission'];
+</script>
+
+<!-- Methods-->
+
+<script>
+    let retreatMessage = 'We no longer wish to conquer your planet. It is full of dogs, which we do not care for.';
+
+    let alienShip = {
+        retreat() {
+            console.log(retreatMessage)
+        },
+        takeOff() {
+            console.log('Spim... Borp... Glix... Blastoff!')
+        }
+    }
+    alienShip.retreat();
+    alienShip.takeOff();
+</script>
+
+<!-- Nested Objects -->
+<script>
+    let spaceship8 = {
+        passengers: [{ name: 'Naresh Tak' }],
+        telescope: {
+            yearBuilt: 2018,
+            model: "91031-XLT",
+            focalLength: 2032
+        },
+        crew: {
+            captain: {
+                name: 'Sandra',
+                degree: 'Computer Engineering',
+                encourageTeam() { console.log('We got this!') },
+                'favorite foods': ['cookies', 'cakes', 'candy', 'spinach']
+            }
+        },
+        engine: {
+            model: "Nimbus2000"
+        },
+        nanoelectronics: {
+            computer: {
+                terabytes: 100,
+                monitors: "HD"
+            },
+            'back-up': {
+                battery: "Lithium",
+                terabytes: 50
+            }
+        }
+    };
+
+    let capFave = spaceship8.crew.captain['favorite foods'][3];
+
+    let firstPassenger = spaceship8.passengers[0];
+    console.log(capFave);
+    console.log(firstPassenger);
+</script>
+
+<!--Pass By Reference-->
+<script>
+    let spaceship9 = {
+        "Fuel Type": "Turbo Fuel",
+        homePlanet: "Earth",
+    };
+    let greenEnergy = (obj) => {
+        obj["Fuel Type"] = "avocado oil";
+    };
+
+    let remotelyDisable = (obj) => {
+        obj.disabled = true;
+    };
+
+    greenEnergy(spaceship9);
+
+    remotelyDisable(spaceship9);
+
+    console.log(spaceship9);
+
+</script>
+
+<!--Looping Through Objects-->
+<script>
+    let spaceship6 = {
+        crew: {
+            captain: {
+                name: 'Lily',
+                degree: 'Computer Engineering',
+                cheerTeam() { console.log('You got this!') }
+            },
+            'chief officer': {
+                name: 'Dan',
+                degree: 'Aerospace Engineering',
+                agree() { console.log('I agree, captain!') }
+            },
+            medic: {
+                name: 'Clementine',
+                degree: 'Physics',
+                announce() { console.log(`Jets on!`) }
+            },
+            translator: {
+                name: 'Shauna',
+                degree: 'Conservation Science',
+                powerFuel() { console.log('The tank is full!') }
+            }
+        }
+    };
+    for (let crewMember in spaceship6.crew) {
+        console.log(`${crewMember}: ${spaceship6.crew[crewMember].name}`)
+    };
+
+    for (let crewMember in spaceship6.crew) {
+        console.log(`${spaceship6.crew[crewMember].name}: ${spaceship6.crew[crewMember].degree}`)
+    }
+</script>
+
+<!-- This Keyword -->
+<script>
+    const robot = {
+        model: '1E78V2',
+        energyLevel: 100,
+        provideInfo() {
+            return `I am ${this.model} and my current energy level is ${this.energyLevel}.`
+        }
+    };
+    console.log(robot.provideInfo());
+</script>
+
+<!-- Arrow Functions and this-->
+<script>
+    const robot1 = {
+        energyLevel: 100,
+        checkEnergy() {
+            console.log(`Energy is currently at ${this.energyLevel}%.`)
+        }
+    }
+    robot1.checkEnergy();
+</script>
+
+<!-- Privacy -->
+<script>
+    const robot2 = {
+        _energyLevel: 100,
+        recharge() {
+            this._energyLevel += 30;
+            console.log(`Recharged! Energy is currently at ${this._energyLevel}%.`)
+        }
+    };
+    robot2._energyLevel = 40;
+    robot2.recharge();
+</script>
+
+<!-- Getters -->
+<script>
+    const robot3 = {
+        _model: "1E78V2",
+        _energyLevel: 100,
+        get energyLevel() {
+            if (typeof this._energyLevel === "number") {
+                return "My current energy level is " + this._energyLevel;
+            } else {
+                return "System malfunction: cannot retrieve energy level";
+            }
+        },
+    };
+    console.log(robot3.energyLevel);
+</script>
+
+<!-- Setters -->
+<script>
+    const robot4 = {
+        _model: "1E78V2",
+        _energyLevel: 100,
+        _numOfSensors: 15,
+        get numOfSensors() {
+            if (typeof this._numOfSensors === "number") {
+                return this._numOfSensors;
+            } else {
+                return "Sensors are currently down.";
+            }
+        },
+        set numOfSensors(num) {
+            if (typeof num === "number" && num >= 0) {
+                this._numOfSensors = num;
+            } else {
+                return "Pass in a number that is greater than or equal to 0";
+            }
+        },
+    };
+    robot4.numOfSensors = 100;
+    console.log(robot4.numOfSensors);
+</script>
+<!-- Factory Functions -->
+<script>
+    const robotFactory = (model, mobile) => {
+        return {
+            model: model,
+            mobile: mobile,
+            beep() {
+                console.log('Beep Boop');
+            }
+        }
+    }
+    const tinCan = robotFactory('P-500', true);
+    tinCan.beep();
+</script>
+
+<!--Property Value Shorthand -->
+<script>
+    const robotFactory1 = (model, mobile) => {
+        return {
+            model,
+            mobile,
+            beep() {
+                console.log('Beep Boop');
+            }
+        }
+    }
+    const newRobot = robotFactory1('P-501', true)
+    console.log(newRobot.model)
+    console.log(newRobot.mobile)
+</script>
+
+<!-- Destructured Assignment -->
+<script>
+    const robot5 = {
+        model: "1E78V2",
+        energyLevel: 100,
+        functionality: {
+            beep() {
+                console.log("Beep Boop");
+            },
+            fireLaser() {
+                console.log("Pew Pew");
+            },
+        },
+    };
+    const { functionality } = robot5;
+    functionality.beep();
+    functionality.fireLaser();
+</script>
+
+<!-- Built-in Object Methods -->
+<script>
+    const robot6 = {
+        model: 'SAL-1000',
+        mobile: true,
+        sentient: false,
+        armor: 'Steel-plated',
+        energyLevel: 75
+    };
+    const robotKeys = Object.keys(robot6);
+
+    console.log(robotKeys);
+    const robotEntries = Object.entries(robot6)
+    console.log(robotEntries);
+    const newRobot1 = Object.assign({ laserBlaster: true, voiceRecognition: true }, robot6);
+    console.log(newRobot1);
+</script>

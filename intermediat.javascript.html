@@ -1,0 +1,532 @@
+<!-- Classes -->
+<script>
+    class Surgeon {
+        constructor(name, department) {
+            this._name = name;
+            this._department = department;
+            this._remainingVacationDays = 20;
+        }
+
+        get name() {
+            return this._name;
+        }
+
+        get department() {
+            return this._department;
+        }
+
+        get remainingVacationDays() {
+            return this._remainingVacationDays;
+        }
+
+        takeVacationDays(daysOff) {
+            this._remainingVacationDays -= daysOff;
+        }
+    }
+
+    const surgeonRomero = new Surgeon('Francisco Romero', 'Cardiovascular');
+    const surgeonJackson = new Surgeon('Ruth Jackson', 'Orthopedics');
+
+    console.log(surgeonRomero.name);
+    surgeonRomero.takeVacationDays(3);
+    console.log(surgeonRomero.remainingVacationDays);
+
+    console.log(surgeonJackson.name);
+    surgeonJackson.takeVacationDays(7);
+    console.log(surgeonJackson.remainingVacationDays);
+
+</script>
+
+<!-- Inheritance -->
+<script>
+    class HospitalEmployee {
+        constructor(name) {
+            this._name = name;
+            this._remainingVacationDays = 20;
+        }
+
+        get name() {
+            return this._name;
+        }
+
+        get remainingVacationDays() {
+            return this._remainingVacationDays;
+        }
+
+        takeVacationDays(daysOff) {
+            this._remainingVacationDays -= daysOff;
+        }
+
+        static generatePassword() {
+            return Math.floor(Math.random() * 10000);
+        }
+    }
+
+    class Nurse extends HospitalEmployee {
+        constructor(name, certifications) {
+            super(name);
+            this._certifications = certifications;
+        }
+
+        get certifications() {
+            return this._certifications;
+        }
+
+        addCertification(newCertification) {
+            this.certifications.push(newCertification);
+        }
+    }
+    const nurseOlynyk = new Nurse("Olynyk", ["Trauma", "Pediatrics"]);
+    console.log(nurseOlynyk.name);
+    nurseOlynyk.takeVacationDays(5);
+    console.log(nurseOlynyk.remainingVacationDays);
+    nurseOlynyk.addCertification("Genetics");
+    console.log(nurseOlynyk.certifications);
+</script>
+
+<!-- Constructing a Promise Object / Success and Failure Callback Functions  -->
+<script>
+    const inventory = {
+        sunglasses: Math.floor(Math.random() * 1000),
+        pants: Math.floor(Math.random() * 1000),
+        bags: Math.floor(Math.random() * 1000)
+    };
+
+    const checkInventory = (order) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                let inStock = order.every(item => inventory[item[0]] >= item[1]);
+                if (inStock) {
+                    resolve(`Thank you. Your order was successful.`);
+                } else {
+                    reject(`We're sorry. Your order could not be completed because some items are sold out.`);
+                }
+            });
+        })
+    };
+    const order = [['sunglasses', 100], ['bags', 100]];
+    const handleSuccess = (resolvedValue) => {
+        console.log(resolvedValue);
+    }
+    const handleFailure = (rejectionreason) => {
+        console.log(rejectionreason);
+    }
+    checkInventory(order)
+        .then(handleSuccess)
+        .catch(handleFailure)              
+</script>
+
+<!--  Node setTimeout() Function -->
+<script>
+    console.log("This is the first line of code in app.js.");
+    const usingSTO = () => {
+        console.log('Yay! Coding is so fun!!');
+    };
+    setTimeout(usingSTO, 6000)
+    console.log("This is the last line of code in app.js.");
+</script>
+
+<!-- Chaining Multiple Promises -->
+<script>
+    const store = {
+        sunglasses: {
+            inventory: 817,
+            cost: 9.99
+        },
+        pants: {
+            inventory: 236,
+            cost: 7.99
+        },
+        bags: {
+            inventory: 17,
+            cost: 12.99
+        }
+    };
+
+    const checkInventory1 = (order) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const itemsArr = order.items;
+                let inStock = itemsArr.every(item => store[item[0]].inventory >= item[1]);
+
+                if (inStock) {
+                    let total = 0;
+                    itemsArr.forEach(item => {
+                        total += item[1] * store[item[0]].cost
+                    });
+                    console.log(`All of the items are in stock. The total cost of the order is ${total}.`);
+                    resolve([order, total]);
+                } else {
+                    reject(`The order could not be completed because some items are sold out.`);
+                }
+            }, generateRandomDelay());
+        });
+    };
+
+    const processPayment = (responseArray) => {
+        const order = responseArray[0];
+        const total = responseArray[1];
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                let hasEnoughMoney = order.giftcardBalance >= total;
+                if (hasEnoughMoney) {
+                    console.log(`Payment processed with giftcard. Generating shipping label.`);
+                    let trackingNum = generateTrackingNumber();
+                    resolve([order, trackingNum]);
+                } else {
+                    reject(`Cannot process order: giftcard balance was insufficient.`);
+                }
+            }, generateRandomDelay());
+        });
+    };
+    const shipOrder = (responseArray) => {
+        const order = responseArray[0];
+        const trackingNum = responseArray[1];
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(`The order has been shipped. The tracking number is: ${trackingNum}.`);
+            }, generateRandomDelay());
+        });
+    };
+    function generateTrackingNumber() {
+        return Math.floor(Math.random() * 1000);
+    }
+    function generateRandomDelay() {
+        return Math.floor(Math.random() * 2000);
+    }
+
+    const order1 = {
+        items: [['sunglasses', Math.floor(Math.random() * 10)], ['bags', Math.floor(Math.random() * 10)]],
+        giftcardBalance: 79.82
+    };
+    checkInventory1(order1)
+        .then(resolvedValueArray => processPayment(resolvedValueArray))
+        .then(resolvedValueArray => shipOrder(resolvedValueArray))
+        .then(successMessage => console.log(successMessage))
+        .catch(errorMessage => console.log(errorMessage));
+</script>
+
+
+<!-- Using Promise.all() -->
+<script>
+    const checkAvailability = (itemName, distributorName) => {
+        console.log(`Checking availability of ${itemName} at ${distributorName}...`);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (restockSuccess()) {
+                    console.log(`${itemName} are in stock at ${distributorName}`)
+                    resolve(itemName);
+                } else {
+                    reject(`Error: ${itemName} is unavailable from ${distributorName} at this time.`);
+                }
+            }, 1000);
+        });
+    };
+    function restockSuccess() {
+        return (Math.random() > .2);
+    }
+    const onFulfill = (itemsArray) => {
+        console.log(`Items checked: ${itemsArray}`);
+        console.log(`Every item was available from the distributor. Placing order now.`);
+    };
+
+    const onReject = (rejectionReason) => {
+        console.log(rejectionReason);
+    };
+    const checkSunglasses = checkAvailability('sunglasses', 'Favorite Supply Co.');
+    const checkPants = checkAvailability('pants', 'Favorite Supply Co.');
+    const checkBags = checkAvailability('bags', 'Favorite Supply Co.');
+
+    Promise.all([checkSunglasses, checkPants, checkBags])
+        .then(onFulfill)
+        .catch(onReject);
+</script>
+
+<!-- The async Keyword -->
+<script>
+    function withConstructor(num) {
+        return new Promise((resolve, reject) => {
+            if (num === 0) {
+                resolve('zero');
+            } else {
+                resolve('not zero');
+            }
+        });
+    }
+
+    withConstructor(0)
+        .then((resolveValue) => {
+            console.log(` withConstructor(0) returned a promise which resolved to: ${resolveValue}.`);
+        });
+    async function withAsync(num) {
+        if (num === 0) {
+            return 'zero';
+        } else {
+            return 'not zero';
+        }
+    }
+    withAsync(100)
+        .then((resolveValue) => {
+            console.log(` withAsync(100) returned a promise which resolved to: ${resolveValue}.`);
+        });
+</script>
+
+<!-- The await Operator -->
+<script>
+    const brainstormDinner = () => {
+        return new Promise((resolve, reject) => {
+            console.log(`I have to decide what's for dinner...`)
+            setTimeout(() => {
+                console.log('Should I make salad...?');
+                setTimeout(() => {
+                    console.log('Should I make ramen...?');
+                    setTimeout(() => {
+                        console.log('Should I make eggs...?');
+                        setTimeout(() => {
+                            console.log('Should I make chicken...?');
+                            resolve('beans');
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+    };
+
+    function nativePromiseDinner() {
+        brainstormDinner().then((meal) => {
+            console.log(`I'm going to make ${meal} for dinner.`);
+        });
+    }
+    async function announceDinner() {
+        let meal = await brainstormDinner();
+        console.log(`I'm going to make ${meal} for dinner.`);
+    }
+    announceDinner();
+</script>
+
+<!-- Writing async Functions -->
+<script>
+    const shopForBeans = () => {
+        return new Promise((resolve, reject) => {
+            const beanTypes = ['kidney', 'fava', 'pinto', 'black', 'garbanzo'];
+            setTimeout(() => {
+                let randomIndex = Math.floor(Math.random() * beanTypes.length);
+                let beanType = beanTypes[randomIndex];
+                console.log(`2. I bought ${beanType} beans because they were on sale.`);
+                resolve(beanType);
+            }, 1000);
+        });
+    }
+
+    async function getBeans() {
+        console.log(`1. Heading to the store to buy beans...`);
+        let value = await shopForBeans();
+        console.log(`3. Great! I'm making ${value} beans for dinner tonight!`);
+    }
+    getBeans();
+</script>
+
+<!-- Handling Dependent Promises -->
+<script>
+    const shopForBeans1 = () => {
+        return new Promise((resolve, reject) => {
+            const beanTypes = ['kidney', 'fava', 'pinto', 'black', 'garbanzo'];
+            setTimeout(() => {
+                let randomIndex = Math.floor(Math.random() * 5);
+                let beanType = beanTypes[randomIndex];
+                console.log(`I bought ${beanType} beans because they were on sale.`);
+                resolve(beanType);
+            }, 1000)
+        })
+    }
+
+    let soakTheBeans = (beanType) => {
+        return new Promise((resolve, reject) => {
+            console.log('Time to soak the beans.');
+            setTimeout(() => {
+                console.log(`... The ${beanType} beans are softened.`);
+                resolve(true);
+            }, 1000);
+        });
+    }
+
+    let cookTheBeans = (isSoftened) => {
+        return new Promise((resolve, reject) => {
+            console.log('Time to cook the beans.');
+            setTimeout(() => {
+                if (isSoftened) {
+                    console.log('... The beans are cooked!');
+                    resolve('\n\nDinner is served!');
+                }
+            }, 1000);
+        });
+    }
+    async function makeBeans() {
+        let type = await shopForBeans1();
+        let isSoft = await soakTheBeans(type);
+        let dinner = await cookTheBeans(isSoft);
+        console.log(dinner);
+    }
+    makeBeans();
+</script>
+
+<!-- Handling Errors -->
+<script>
+    let randomSuccess = () => {
+        let num = Math.random();
+        if (num < .5) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    let cookBeanSouffle = () => {
+        return new Promise((resolve, reject) => {
+            console.log('Fingers crossed... Putting the Bean Souffle in the oven');
+            setTimeout(() => {
+                let success = randomSuccess();
+                if (success) {
+                    resolve('Bean Souffle');
+                } else {
+                    reject('Dinner is ruined!');
+                }
+            }, 1000);
+        });
+    };
+    async function hostDinnerParty() {
+        try {
+            let dinner = await cookBeanSouffle();
+            console.log(`${dinner} is served!`);
+        } catch (error) {
+            console.log(error);
+            console.log("Ordering a pizza!");
+        }
+    }
+    hostDinnerParty();
+</script>
+
+<!-- Handling Independent Promises -->
+<script>
+    let cookBeans = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('beans');
+            }, 1000);
+        });
+    };
+
+    let steamBroccoli = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('broccoli');
+            }, 1000);
+        });
+    };
+
+    let cookRice = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('rice');
+            }, 1000);
+        });
+    };
+
+    let bakeChicken = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('chicken')
+            }, 1000);
+        });
+    };
+    async function serveDinner() {
+        const vegetablePromise = steamBroccoli();
+        const starchPromise = cookRice();
+        const proteinPromise = bakeChicken();
+        const sidePromise = cookBeans();
+        console.log(`Dinner is served. We're having ${await vegetablePromise}, ${await starchPromise}, ${await proteinPromise}, and ${await sidePromise}.`);
+    }
+    serveDinner();
+</script>
+
+<!-- Await Promise.all -->
+<script>
+    let cookBeans1 = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('beans');
+            }, 1000);
+        });
+    };
+
+    let steamBroccoli1 = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('broccoli');
+            }, 1000);
+        });
+    };
+
+    let cookRice1 = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('rice');
+            }, 1000);
+        });
+    };
+
+    let bakeChicken1 = () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('chicken')
+            }, 1000);
+        });
+    };
+    async function serveDinnerAgain() {
+        let foodArray = await Promise.all([steamBroccoli1(), cookRice1(), bakeChicken1(), cookBeans1()]);
+
+        console.log(`Dinner is served. We're having ${foodArray[0]}, ${foodArray[1]}, ${foodArray[2]}, and ${foodArray[3]}.`);
+    }
+
+    serveDinnerAgain();
+</script>
+
+<!-- async and await function i created -->
+<script>
+    async function naresh() {
+
+        let bikanerWeather = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("20 deg")
+            }, 7000)
+        });
+        let jaipurWeather = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("29 deg")
+            }, 9000)
+        });
+        console.log("fetching bikaner wather please...")
+
+        let bikanerW = await bikanerWeather
+
+        console.log("fetched bikaner wather:" + bikanerW)
+
+        console.log("fetching jaipur wather please...")
+
+        let jaipurW = await jaipurWeather
+
+        console.log("fetched jaipur wather:" + jaipurW)
+
+        return (bikanerW, jaipurW)
+    }
+
+    const jay = async () => {
+        console.log("Give me the details of weather please")
+    }
+
+    const main = async () => {
+        console.log("the weather report");
+        let a = await naresh()
+        let b = await jay()
+    }
+    main()
+</script>
